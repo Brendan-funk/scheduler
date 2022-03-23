@@ -8,10 +8,6 @@ export default function Button(props) {
       "button--danger": props.danger,
    })
  
-   if (props.danger) {
-     buttonClass += " button--danger";
-   }
- 
    return (
      <button
        className={buttonClass}
