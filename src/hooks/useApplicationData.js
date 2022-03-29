@@ -8,24 +8,34 @@
     });
     const setDay = function(date){
       setState(Object.assign({}, state, {day: date}));
-    } 
+    }
+    const getDateIndex = function(date) {
+      for (const day in state.days) {
+        if(state.days[day].name === date) {
+          return state.days[day].id-1;
+        }
+      }
+    }
     const changeSpots = function(bool, date) {
       let change = 0;
        if(bool) {
-         change = 1;
-       } else {
          change = -1;
+       } else {
+         change = 1;
        }
+       const dayIndex = getDateIndex(date);
         const day = {
-          ...state.days[date],
-          spots: state.days[date].spots + change
+          ...state.days[dayIndex],
+          spots: state.days[dayIndex].spots + change
         }
-        const days = {
-          ...state.days,
-          [date]: day
-        }
-        setState(...state,
-          days)
+        const days = state.days
+        days[dayIndex] = day;
+
+        setState({
+          ...state,
+          days
+        });
+        console.log(state);
     }
     useEffect(() => {
       Promise.all([
@@ -43,6 +53,7 @@
       
       return axios.delete(`http://localhost:8001/api/appointments/${id}`)
       .then(() => {
+        changeSpots(false, currentDay);
         const appointment = {
           ...state.appointments[id],
           interview: null
@@ -55,7 +66,7 @@
           ...state,
           appointments
         })
-        changeSpots(false, currentDay);
+        
         return;
         })
     }
@@ -65,17 +76,19 @@
         ...state.appointments[id],
         interview: { ...interview }
       };
-      const appointments = {
-        ...state.appointments,
-        [id] : appointment
-      };
+      
       return axios.put(`http://localhost:8001/api/appointments/${id}`,appointment)
       .then(()=> {
+        changeSpots(true, currentDay);
+        const appointments = {
+          ...state.appointments,
+          [id] : appointment
+        };
         setState({
-        ...state,
-        appointments
-      })
-      changeSpots(true, currentDay);
+          ...state,
+          appointments
+        })
+      
       return;
     })
     
