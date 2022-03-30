@@ -21,3 +21,14 @@ npm test
 ```sh
 npm run storybook
 ```
+## Running Cypress
+
+npm run cypress
+
+## Final Product
+
+![Home Page]()
+
+![Booking An Interview]()
+
+![Cancel Confirmation]()
