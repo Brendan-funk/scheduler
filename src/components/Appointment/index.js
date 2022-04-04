@@ -22,14 +22,14 @@ export default function Appointment(props) {
   const SAVE_ERROR = "SAVE_ERROR";
   const DELETE_ERROR = "DELETE_ERROR";
 
-  function save(name, interviewer) {
+  function save(name, interviewer, edit) {
     const interview = {
       student: name,
       interviewer
     };
     transition(SAVING);
     props
-      .bookInterview(props.id, interview)
+      .bookInterview(props.id, interview, edit)
       .then(() => transition(SHOW))
       .catch(() => transition(SAVE_ERROR, true));
   }
@@ -75,6 +75,7 @@ export default function Appointment(props) {
           onSubmit={save}
           student={props.interview.student}
           interviewer={props.interview.interviewer.id}
+          edit='edit'
           />
       )}
       {mode === SAVING && <Status message='Saving' />}
@@ -83,7 +84,7 @@ export default function Appointment(props) {
       message='Are you sure you want to cancel appointment?' 
       onCancel={() => back()} 
       onConfirm={() => deleteInterview()}/>}
-      {mode === SAVE_ERROR && <Error message='Error While Saving' onClose={() => back()} />}
+      {mode === SAVE_ERROR && <Error message='Error While Saving' onClose={() => transition(EDIT, true)} />}
       {mode === DELETE_ERROR && <Error message='Error While Deleting' onClose={() => back()} />}
     </article>
   )

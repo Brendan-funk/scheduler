@@ -70,7 +70,7 @@
         return;
         })
     }
-    function bookInterview(id, interview) {
+    function bookInterview(id, interview, edit) {
       const currentDay = state.day;
       const appointment = {
         ...state.appointments[id],
@@ -79,7 +79,9 @@
       
       return axios.put(`http://localhost:8001/api/appointments/${id}`,appointment)
       .then(()=> {
-        changeSpots(true, currentDay);
+        if(!edit) {
+          changeSpots(true, currentDay);
+        }
         const appointments = {
           ...state.appointments,
           [id] : appointment
